@@ -17,13 +17,19 @@ jobs:
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+
     - name: Run Playwright tests
-      run: npx playwright test
-    - uses: actions/upload-artifact@v4
+      # ใช้คำสั่งเดียว และเพิ่ม --update-snapshots เข้าไปตรงนี้เลย
+      # เพื่อให้ GitHub สร้างรูปเวอร์ชัน Linux ให้เราทันที
+      run: npx playwright test --update-snapshots
+
+    - name: Upload Report & New Snapshots
+      uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
-        name: playwright-report
-        path: playwright-report/
+        name: playwright-results
+        # เก็บทั้ง Report และรูป Snapshots ที่อัปเดตใหม่
+        path: |
+          playwright-report/
+          tests/**/*-snapshots/
         retention-days: 30
-    - name: Run Playwright tests
-      run: npx playwright test --update-snapshots # เพิ่ม --update-snapshots เข้าไป
