@@ -26,7 +26,8 @@ export default defineConfig({
     // end-to-end projects run against the running Vite app
     { name: 'e2e-chromium', use: { ...devices['Desktop Chrome'] } },
     // { name: 'e2e-firefox', use: { ...devices['Desktop Firefox'] } },
-    { name: 'e2e-webkit', use: { ...devices['Desktop Safari'] } },
+    // webkit commented out: requires many extra deps not available in Github Actions
+    // { name: 'e2e-webkit', use: { ...devices['Desktop Safari'] } },
 
     // component tests live under tests/component and use the same browser device
     {
