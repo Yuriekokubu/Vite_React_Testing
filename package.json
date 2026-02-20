@@ -7,7 +7,14 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ci": "playwright test --reporter=list,html",
+    "test:install": "npx playwright install",
+    "test:prod": "playwright test --project=production",
+    "prebuild": "npm run lint && npm run test:ci",
+    "postbuild": "npm run test:prod"
   },
   "dependencies": {
     "react": "^19.2.0",
@@ -15,6 +22,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@playwright/experimental-ct-react": "^1.58.2",
     "@playwright/test": "^1.58.2",
     "@types/node": "^25.3.0",
     "@types/react": "^19.2.7",
@@ -24,6 +32,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
-    "vite": "^7.3.1"
+    "serve": "^14.2.5",
+    "vite": "^6.4.1"
   }
 }

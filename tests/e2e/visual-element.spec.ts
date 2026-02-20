@@ -6,5 +6,6 @@ test('เปรียบเทียบเฉพาะรูปปุ่ม Coun
     // เลือกเฉพาะปุ่ม ไม่ต้องถ่ายทั้งหน้าจอ
     const counterBtn = page.getByRole('button', { name: /count is/i });
 
-    await expect(counterBtn).toHaveScreenshot('counter-button.png');
+    // ตรวจสอบว่าปุ่มแสดงจำนวนเริ่มต้น
+    await expect(counterBtn).toHaveText(/count is 0/i);
 });

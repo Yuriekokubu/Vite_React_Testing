@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   testDir: './tests',
@@ -22,8 +23,36 @@ export default defineConfig({
   },
 
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    // { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
-  ],
+    // end-to-end projects run against the running Vite app
+    { name: 'e2e-chromium', use: { ...devices['Desktop Chrome'] } },
+    // { name: 'e2e-firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'e2e-webkit', use: { ...devices['Desktop Safari'] } },
+
+    // component tests live under tests/component and use the same browser device
+    {
+      name: 'component-chromium',
+      testDir: 'tests/component',
+      use: { ...devices['Desktop Chrome'] },
+    },
+    // add more component projects as needed
+    // production build tests (serve dist directory)
+    {
+      name: 'production',
+      use: { ...devices['Desktop Chrome'] },
+      webServer: {
+        command: 'npx serve dist -l 4173',
+        url: 'http://localhost:4173',
+        reuseExistingServer: !process.env.CI,
+      },
+    },  ],
+
+  // port used by the component-test server (Vite)
+  ctPort: 3100,
+  // you can customize Vite configuration for CT if necessary
+  ctViteConfig: {
+    plugins: [
+      // reuse the same react plugin as project
+      react(),
+    ],
+  },
 });
