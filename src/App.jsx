@@ -32,10 +32,11 @@ function App() {
       {/* login form */}
       {!isLoggedIn ? (
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            // simple auth handled by util
-            if (authenticate(loginUser, loginPass)) {
+            // authenticate returns a promise now
+            const ok = await authenticate(loginUser, loginPass);
+            if (ok) {
               setIsLoggedIn(true);
             } else {
               alert('Invalid credentials');

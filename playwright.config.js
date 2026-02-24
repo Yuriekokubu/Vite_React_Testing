@@ -41,7 +41,8 @@ export default defineConfig({
       name: 'production',
       use: { ...devices['Desktop Chrome'] },
       webServer: {
-        command: 'npx serve dist -l 4173',
+        // start both the auth server and the static file server
+        command: 'npm run serve:prod',
         url: 'http://localhost:4173',
         reuseExistingServer: !process.env.CI,
       },
