@@ -8,7 +8,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
-  
+
   use: {
     // ตั้งค่า Base URL ให้ตรงกับ Vite (ปกติคือพอร์ต 5173)
     baseURL: 'http://localhost:5173',
@@ -17,9 +17,12 @@ export default defineConfig({
 
   // สั่งให้ Playwright รัน Vite server ให้อัตโนมัติก่อนเริ่มเทส
   webServer: {
-    command: 'npm run dev',
+    // ใช้สคริปต์ที่รันทั้ง Auth (โหมดเทส) และ Vite พร้อมกัน
+    command: 'concurrently "npm run start:auth:test" "vite"',
     url: 'http://localhost:5173',
     reuseExistingServer: !process.env.CI,
+    stdout: 'pipe', // แนะนำให้เปิดไว้เผื่อดู Log ถ้าเทสพัง
+    stderr: 'pipe',
   },
 
   projects: [
@@ -46,7 +49,7 @@ export default defineConfig({
         url: 'http://localhost:4173',
         reuseExistingServer: !process.env.CI,
       },
-    },  ],
+    },],
 
   // port used by the component-test server (Vite)
   ctPort: 3100,
