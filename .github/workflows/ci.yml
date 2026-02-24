@@ -9,31 +9,38 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [20.x]
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 20 # ใช้ LTS เพื่อความเสถียรของ better-sqlite3
           cache: 'npm'
+
       - name: Install dependencies
         run: npm ci
-      - name: Install Playwright browsers
-        run: npm run test:install
-      - name: Lint & run CI tests (prebuild)
-        run: npm run prebuild
-      - name: Build
+
+      - name: Install Playwright Browsers
+        # เพิ่ม --with-deps เพื่อให้มั่นใจว่า Ubuntu มี Library ครบสำหรับรัน Browser
+        run: npx playwright install --with-deps
+
+      - name: Run Build (includes Lint & Prebuild Tests)
+        # เนื่องจากใน package.json มี prebuild hook 
+        # การสั่ง build จะทำการ Lint และรัน test:ci อัตโนมัติ
         run: npm run build
-      - name: Run post-build tests
+
+      - name: Run Post-build Tests
+        # รันการทดสอบหลังจาก Build เสร็จแล้ว (Production Check)
         run: npm run postbuild
-      - name: Upload Playwright results
+
+      - name: Upload Playwright Report
+        # ให้ทำงานเสมอแม้เทสจะพัง (if: always) เพื่อเอาไว้โหลดมาดูว่าพังตรงไหน
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-results
-          path: |
-            test-results
-            playwright-report
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
