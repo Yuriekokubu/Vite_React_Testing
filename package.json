@@ -18,7 +18,8 @@
     "test:install": "npx playwright install",
     "test:prod": "playwright test --project=production",
     "test:prod:ui": "playwright test --project=production --ui --headed",
-    "serve:prod": "concurrently \"npm run start:auth\" \"npx serve dist -l 4173\""
+    "serve:prod": "concurrently \"npm run start:auth\" \"npx serve dist -l 4173\"",
+    "serve:prod:test": "concurrently \"npm run start:auth:test\" \"npx serve dist -l 4173\""
   },
   "dependencies": {
     "better-sqlite3": "^12.6.2",
